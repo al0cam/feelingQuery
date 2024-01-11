@@ -4,7 +4,7 @@ import db from "./Firebase";
 function createRepository(){
 
     let teamRef;
-    let dayRef;
+    let dateRef;
     let feelingRef;
 
 
@@ -19,9 +19,10 @@ function createRepository(){
         });
     }
     
-
-    function addDay(date: Date){
-        dayRef = addDoc(collection(db, "days"), {
+    // add a subcollection for the dates which will then contain feelings
+    function addDate(date: Date){
+        
+        dateRef = addDoc(collection(db, "users"), {
             date: date
         }).then((docRef) => {
             console.log("Document written with ID: ", docRef.id);
@@ -44,7 +45,7 @@ function createRepository(){
 
     return {
         addTeam,
-        addDay,
+        addDate,
         addFeeling
     }
 }

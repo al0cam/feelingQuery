@@ -13,6 +13,10 @@
       class="btn btn-primary"
       on:click={() => repository.addTeam("Test_1101-2124")}>Add team</button
     >
+    <button
+      class="btn btn-primary"
+      on:click={() => repository.addDate(currentDate)}>Add todays date</button
+    >
     <FeelingPicker />
   </main>
 </div>
