@@ -1,19 +1,6 @@
 import { addDoc, collection } from "firebase/firestore";
 import db from "./Firebase";
 
-type team = {
-    name: string;
-    id: string;
-}
-
-type day = {
-    date: Date;
-}
-
-type feeling = {
-    feeling: number,
-}
-
 function createRepository(){
 
     let teamRef;
@@ -21,10 +8,9 @@ function createRepository(){
     let feelingRef;
 
 
-    function addTeam(team: team){
+    function addTeam(name: string){
         teamRef = addDoc(collection(db, "teams"), {
-            name: team.name,
-            id: team.id
+            name: name,
         }).then((docRef) => {
             console.log("Document written with ID: ", docRef.id);
         }
@@ -34,9 +20,9 @@ function createRepository(){
     }
     
 
-    function addDay(day: day){
+    function addDay(date: Date){
         dayRef = addDoc(collection(db, "days"), {
-            date: day.date
+            date: date
         }).then((docRef) => {
             console.log("Document written with ID: ", docRef.id);
         }
@@ -45,9 +31,9 @@ function createRepository(){
         });
     }
 
-    function addFeeling(feeling: feeling){
+    function addFeeling(feeling: number){
         feelingRef = addDoc(collection(db, "feelings"), {
-            feeling: feeling.feeling
+            feeling: feeling
         }).then((docRef) => {
             console.log("Document written with ID: ", docRef.id);
         }
@@ -56,8 +42,11 @@ function createRepository(){
         });
     }
 
-
-
+    return {
+        addTeam,
+        addDay,
+        addFeeling
+    }
 }
 
 
