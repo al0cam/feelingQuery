@@ -39,4 +39,10 @@
       </div>
     {/each}
   </div>
+  <button
+    class="btn btn-primary"
+    on:click={() => repository.addFeeling(selectedFeeligns.value)}
+  >
+    Submit
+  </button>
 </div>
