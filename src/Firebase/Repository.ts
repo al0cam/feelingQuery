@@ -1,17 +1,19 @@
-import { addDoc, collection } from "firebase/firestore";
+import { DocumentReference, addDoc, collection } from "firebase/firestore";
 import db from "./Firebase";
+import { set } from "firebase/database";
 
 function createRepository(){
 
-    let teamRef;
-    let dateRef;
-    let feelingRef;
+    let teamRef: DocumentReference;
+    let dateRef: DocumentReference;
+    let feelingRef: DocumentReference;
 
 
     function addTeam(name: string){
-        teamRef = addDoc(collection(db, "teams"), {
+        addDoc(collection(db, "teams"), {
             name: name,
         }).then((docRef) => {
+            teamRef = docRef;
             console.log("Document written with ID: ", docRef.id);
         }
         ).catch((error) => {
@@ -21,10 +23,10 @@ function createRepository(){
     
     // add a subcollection for the dates which will then contain feelings
     function addDate(date: Date){
-        
-        dateRef = addDoc(collection(db, "users"), {
+        addDoc(collection(teamRef, "dates"), {
             date: date
         }).then((docRef) => {
+            dateRef = docRef;    
             console.log("Document written with ID: ", docRef.id);
         }
         ).catch((error) => {
@@ -33,9 +35,10 @@ function createRepository(){
     }
 
     function addFeeling(feeling: number){
-        feelingRef = addDoc(collection(db, "feelings"), {
+        addDoc(collection(dateRef, "feelings"), {
             feeling: feeling
         }).then((docRef) => {
+            feelingRef = docRef;
             console.log("Document written with ID: ", docRef.id);
         }
         ).catch((error) => {
@@ -46,7 +49,9 @@ function createRepository(){
     return {
         addTeam,
         addDate,
-        addFeeling
+        addFeeling,
+        setTeamRef: (ref: DocumentReference) => teamRef = ref,
+        setDateRef: (ref: DocumentReference) => dateRef = ref,
     }
 }
 
