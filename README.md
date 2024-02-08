@@ -1,47 +1,81 @@
-# Svelte + TS + Vite
+# FeelingQuery
 
-This template should help get you started developing with Svelte and TypeScript in Vite.
+## A simple web app to help you track your feelings
 
-## Recommended IDE Setup
+### Purpose
+
+The main idea of the app is to track the feelings of a group of people which can be useful in a scrum team for example.
+
+### Stack: Svelte + TS + Vite + TailwindCSS + DaisyUI
+
+The application is built using Svelte and TypeScript. The build tool is Vite.
+The app uses TailwindCSS and DaisyUI for styling.
+
+### Recommended IDE Setup
 
 [VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
+Also, install the [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss) extension.
 
-## Need an official Svelte framework?
+### How to run the app
 
-Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also powered by Vite. Deploy anywhere with its serverless-first approach and adapt to various platforms, with out of the box support for TypeScript, SCSS, and Less, and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
+First of all, you need to have Node.js and Git installed on your machine.
+I will assume you already have that done and go from there.
 
-## Technical considerations
+1. Clone the repository
+2. Run `npm install`
+3. Run `npm run dev`
+4. Open your browser and go to `http://localhost:SOME_PORT` where `SOME_PORT` is the port number that Vite is using, it is random because there was no need for a specific port.
+5. Enjoy the app!
 
-**Why use this over SvelteKit?**
+### How to build the app
 
-- It brings its own routing solution which might not be preferable for some users.
-- It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
+1. Run `npm ci`
+2. Run `npm run build`
+3. The build will be in the `dist` folder
 
-This template contains as little as possible to get started with Vite + TypeScript + Svelte, while taking into account the developer experience with regards to HMR and intellisense. It demonstrates capabilities on par with the other `create-vite` templates and is a good starting point for beginners dipping their toes into a Vite + Svelte project.
+### How to run the tests
 
-Should you later need the extended capabilities and extensibility provided by SvelteKit, the template has been structured similarly to SvelteKit so that it is easy to migrate.
+There are no tests yet.
 
-**Why `global.d.ts` instead of `compilerOptions.types` inside `jsconfig.json` or `tsconfig.json`?**
+### How to contribute
 
-Setting `compilerOptions.types` shuts out all other types not explicitly listed in the configuration. Using triple-slash references keeps the default TypeScript setting of accepting type information from the entire workspace, while also adding `svelte` and `vite/client` type information.
+1. Fork the repository
+2. Create a new branch
+3. Make your changes
+4. Open a pull request
 
-**Why include `.vscode/extensions.json`?**
+### License
 
-Other templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the user to install the recommended extension upon opening the project.
+MIT License
 
-**Why enable `allowJs` in the TS template?**
+Copyright (c) [2024] [Benjamin Filip Šikač]
 
-While `allowJs: false` would indeed prevent the use of `.js` files in the project, it does not prevent the use of JavaScript syntax in `.svelte` files. In addition, it would force `checkJs: false`, bringing the worst of both worlds: not being able to guarantee the entire codebase is TypeScript, and also having worse typechecking for the existing JavaScript. In addition, there are valid use cases in which a mixed codebase may be relevant.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish copies of the Software,
+and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-**Why is HMR not preserving my local component state?**
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-HMR state preservation comes with a number of gotchas! It has been disabled by default in both `svelte-hmr` and `@sveltejs/vite-plugin-svelte` due to its often surprising behavior. You can read the details [here](https://github.com/rixo/svelte-hmr#svelte-hmr).
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
-If you have state that's important to retain within a component, consider creating an external store which would not be replaced by HMR.
+### TOOD
 
-```ts
-// store.ts
-// An extremely simple external store
-import { writable } from 'svelte/store'
-export default writable(0)
-```
+- [ ] Add secrets to Firebase
+- [ ] Add CI/CD pipeline for testing branch
+- [ ] Add CI/CD pipeline for main branch
+- [ ] Add a way to share the feelings with the team
+- [ ] Add a way to visualize the feelings
+- [ ] Add a way to export the feelings
+- [ ] Add a way to import the feelings
+- [ ] Define logic for fetching the feelings
+- [ ] Add tests
