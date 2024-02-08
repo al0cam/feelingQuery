@@ -11,6 +11,7 @@
   <main
     class="bg-gray-600 m-0 mx-auto flex flex-col gap-2 p-2 justify-center w-4/6 rounded-md"
   >
+    <span class="text-6xl mx-auto">WORK IN PROGRESS</span>
     <div class="flex flex-col gap-1 w-full">
       <h1 class="text-2xl">Set team</h1>
       <input class="input w-fill" bind:value={teamRef} />
