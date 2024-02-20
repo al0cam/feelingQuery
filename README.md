@@ -1,6 +1,6 @@
 # FeelingQuery
 
-## A simple web app to help you track your feelings
+A simple web app to help you track your feelings
 
 ### Purpose
 
