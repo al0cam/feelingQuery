@@ -2,21 +2,21 @@
 
 A simple web app to help you track your feelings
 
-### Purpose
+## Purpose
 
 The main idea of the app is to track the feelings of a group of people which can be useful in a scrum team for example.
 
-### Stack: Svelte + TS + Vite + TailwindCSS + DaisyUI
+## Stack: Svelte + TS + Vite + TailwindCSS + DaisyUI
 
 The application is built using Svelte and TypeScript. The build tool is Vite.
 The app uses TailwindCSS and DaisyUI for styling.
 
-### Recommended IDE Setup
+## Recommended IDE Setup
 
 [VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
 Also, install the [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss) extension.
 
-### How to run the app
+## How to run the app
 
 First of all, you need to have Node.js and Git installed on your machine.
 I will assume you already have that done and go from there.
@@ -27,24 +27,24 @@ I will assume you already have that done and go from there.
 4. Open your browser and go to `http://localhost:SOME_PORT` where `SOME_PORT` is the port number that Vite is using, it is random because there was no need for a specific port.
 5. Enjoy the app!
 
-### How to build the app
+## How to build the app
 
 1. Run `npm ci`
 2. Run `npm run build`
 3. The build will be in the `dist` folder
 
-### How to run the tests
+## How to run the tests
 
 There are no tests yet.
 
-### How to contribute
+## How to contribute
 
 1. Fork the repository
 2. Create a new branch
 3. Make your changes
 4. Open a pull request
 
-### License
+## License
 
 MIT License
 
@@ -68,7 +68,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-### TOOD
+## TOOD
 
 - [ ] Add secrets to Firebase
 - [ ] Add CI/CD pipeline for testing branch
