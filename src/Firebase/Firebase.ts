@@ -18,13 +18,20 @@ const firebaseConfig = {
     measurementId: import.meta.env.VITE_MEASUREMENT_ID,
 };
 
+declare global {
+    // eslint-disable-next-line no-var
+    var FIREBASE_APPCHECK_DEBUG_TOKEN: boolean | string | undefined;
+}
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
 const appCheck = initializeAppCheck(app, {
     provider: new ReCaptchaV3Provider(import.meta.env.VITE_CAPTCHA_KEY),
     isTokenAutoRefreshEnabled: true
 });
+
 
 
 export default db;
