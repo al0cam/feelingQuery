@@ -26,7 +26,7 @@ declare global {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+// self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
 const appCheck = initializeAppCheck(app, {
     provider: new ReCaptchaV3Provider(import.meta.env.VITE_CAPTCHA_KEY),
     isTokenAutoRefreshEnabled: true
