@@ -1,18 +1,9 @@
 <script lang="ts">
-  import { repository } from "./Firebase/Repository";
-  import FeelingPicker from "./lib/FeelingPicker.svelte";
   import { notificationStore } from "./Stores/NotificationStore";
   import NotificationToast from "./lib/NotificationToast.svelte";
   import DisplayFeelings from "./lib/DisplayFeelings.svelte";
   import AddFeelings from "./lib/AddFeelings.svelte";
-
-  let currentDate = new Date();
-  let teamRef: string;
-
-  type Tab = {
-    title: string;
-    componentName: any;
-  };
+  import type { Tab } from "./Models/Tab";
 
   let tabs: Tab[] = [
     {
@@ -50,7 +41,7 @@
     {/if}
   </main>
 </div>
-
+<!-- Toast notification system -->
 <div class="toast toast-top toast-end max-w-sm">
   {#each $notificationStore as notification}
     <NotificationToast {notification} />
