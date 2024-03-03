@@ -13,7 +13,6 @@
     class="btn btn-primary"
     on:click={() => repository.fetchTeamByName(teamRef)}>Set team</button
   >
-  <!-- TODO: write code that generates toast messages for success, error and warning -->
 </div>
 
 <button
