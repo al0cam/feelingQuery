@@ -1,33 +1,58 @@
 <script lang="ts">
-  import { DocumentReference } from "firebase/firestore";
   import { repository } from "./Firebase/Repository";
   import FeelingPicker from "./lib/FeelingPicker.svelte";
+  import { notificationStore } from "./Stores/NotificationStore";
+  import NotificationToast from "./lib/NotificationToast.svelte";
+  import DisplayFeelings from "./lib/DisplayFeelings.svelte";
+  import AddFeelings from "./lib/AddFeelings.svelte";
 
   let currentDate = new Date();
   let teamRef: string;
+
+  type Tab = {
+    title: string;
+    componentName: any;
+  };
+
+  let tabs: Tab[] = [
+    {
+      title: "Add feelings",
+      componentName: AddFeelings,
+    },
+    {
+      title: "Display feelings",
+      componentName: DisplayFeelings,
+    },
+  ];
+
+  let currentTab = 0;
 </script>
 
 <div class="bg-gray-700 min-h-screen min-w-screen">
   <main
     class="bg-gray-600 m-0 mx-auto flex flex-col gap-2 p-2 justify-center w-4/6 rounded-md"
   >
-    <span class="text-6xl mx-auto">WORK IN PROGRESS</span>
-    <div class="flex flex-col gap-1 w-full">
-      <h1 class="text-2xl">Set team</h1>
-      <input class="input w-fill" bind:value={teamRef} />
-      <button class="btn btn-primary" on:click={() => repository.setTeamRef()}
-        >Set team</button
-      >
+    <div role="tablist" class="tabs tabs-lifted">
+      {#each tabs as tab, i}
+        <button
+          role="tab"
+          aria-selected={i === currentTab}
+          class={`tab ${i === currentTab ? "tab-active" : ""}`}
+          on:click={() => (currentTab = i)}
+        >
+          {tab.title}
+        </button>
+      {/each}
     </div>
-
-    <button
-      class="btn btn-primary"
-      on:click={() => repository.addTeam("Test_1101-2124")}>Add team</button
-    >
-    <button
-      class="btn btn-primary"
-      on:click={() => repository.addDate(currentDate)}>Add todays date</button
-    >
-    <FeelingPicker />
+    <span class="text-6xl mx-auto">WORK IN PROGRESS</span>
+    {#if tabs[currentTab].componentName}
+      <svelte:component this={tabs[currentTab].componentName} />
+    {/if}
   </main>
+</div>
+
+<div class="toast toast-top toast-end max-w-sm">
+  {#each $notificationStore as notification}
+    <NotificationToast {notification} />
+  {/each}
 </div>
