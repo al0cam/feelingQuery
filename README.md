@@ -70,12 +70,13 @@ SOFTWARE.
 
 ## TOOD
 
-- [ ] Add secrets to Firebase
-- [ ] Add CI/CD pipeline for testing branch
-- [ ] Add CI/CD pipeline for main branch
+- [x] Add secrets to Firebase
+- [x] write code that generates toast messages for success, error and warning
+- [ ] Define logic for fetching the feelings
 - [ ] Add a way to share the feelings with the team
 - [ ] Add a way to visualize the feelings
 - [ ] Add a way to export the feelings
 - [ ] Add a way to import the feelings
-- [ ] Define logic for fetching the feelings
+- [ ] Add CI/CD pipeline for testing branch
+- [ ] Add CI/CD pipeline for main branch
 - [ ] Add tests
