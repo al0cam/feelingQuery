@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import { repository } from "../Firebase/Repository";
 
   let currentDate = new Date();
@@ -16,8 +17,8 @@
     { name: "Down", value: 1 },
   ];
 
-  let selectedFeeligns: Feeling;
-  $: console.log(selectedFeeligns);
+  let selectedFeeligns: Feeling = feelings[0];
+  // $: console.log(selectedFeeligns);
 </script>
 
 <div class="m-3 flex flex-col gap-4">
@@ -33,6 +34,7 @@
             type="radio"
             name="radio-10"
             class="radio"
+            checked={selectedFeeligns === feeling}
             on:change={() => (selectedFeeligns = feeling)}
           />
         </label>
