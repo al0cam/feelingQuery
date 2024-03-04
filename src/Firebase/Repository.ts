@@ -34,7 +34,7 @@ function createRepository(){
     
     // add a subcollection for the dates which will then contain feelings
     function addDate(date: Date){
-        if(isEmpty(date, "Date")){
+        if(isEmpty(date, "Date") || isEmpty(teamRef, "Team")){
             return;
         }
         addDoc(collection(teamRef, "dates"), {
@@ -50,7 +50,7 @@ function createRepository(){
     }
 
     function addFeeling(feeling: number){
-        if(isEmpty(feeling, "Feeling")){
+        if(isEmpty(feeling, "Feeling") || isEmpty(dateRef, "Date") || isEmpty(teamRef, "Team")){
             return;
         }
         addDoc(collection(dateRef, "feelings"), {
