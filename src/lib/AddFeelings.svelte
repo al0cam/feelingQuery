@@ -2,8 +2,7 @@
   import { repository } from "../Firebase/Repository";
   import FeelingPicker from "./FeelingPicker.svelte";
 
-  export let teamName: string = "";
-  let currentDate = new Date();
+  export let teamName: string = "Ok";
 </script>
 
 <div class="flex flex-col gap-1 w-full">
@@ -12,7 +11,7 @@
   <div class="flex flex-row gap-2">
     <button
       class="btn btn-primary flex-auto w-0"
-      on:click={() => repository.fetchTeamByName(teamName)}>Set team</button
+      on:click={() => repository.fetchTeamByTeamName(teamName)}>Set team</button
     >
     <button
       class="btn btn-primary flex-auto w-0"
@@ -20,8 +19,4 @@
     >
   </div>
 </div>
-
-<button class="btn btn-primary" on:click={() => repository.addDate(currentDate)}
-  >Add todays date</button
->
 <FeelingPicker />
