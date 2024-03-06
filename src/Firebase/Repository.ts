@@ -15,38 +15,23 @@ function createRepository(){
         }
     }
 
-    function docExists(doc: DocumentReference): boolean {
-        getDoc(doc)
-        .then((doc) => {
-            if (doc.exists()) {
-                console.log("Document data:", doc.data());
-                return true;
-            } else {
-                console.log("No such document!");
-                return false;
-            }
-        })
-        .catch((error) => {
-            console.error("Error getting document:", error);
-        });
-        console.log("Nije postojao");
-        return false;
+    async function docExists(doc: DocumentReference): Promise<boolean> {
+        let docSnap = await getDoc(doc);
+        return docSnap.exists();
     }
 
-    function addTeam(teamName: string){
+    async function addTeam(teamName: string){
         if(isEmpty(teamName, "Team")){
             return;
         }
         teamRef = doc(db, "teams", teamName);
 
-        if(docExists(teamRef)){
-            console.log("Team already exists");
-            
+        if(await docExists(teamRef)){
             notificationStore.addErrorNotification("Team already exists");
             return;
         }
 
-        setDoc(doc(db, "teams", teamName), { teamName: teamName, }, { merge: true } )
+        setDoc(teamRef, { teamName: teamName, }, { merge: true } )
         .then((docRef) => {
             notificationStore.addSuccessNotification("Team added successfully");
             addDate(new Date());
@@ -92,36 +77,31 @@ function createRepository(){
         });
     }
 
-    function fetchTeamByTeamName(teamName: string) {
+    async function fetchTeamByTeamName(teamName: string) {
         teamName = teamName.trim();
         if(isEmpty(teamName, "Team")){
             return;
         }
         teamRef = doc(db, "teams", teamName);
-        if(docExists(teamRef)){
+        if(await docExists(teamRef)){
             notificationStore.addSuccessNotification("Team fetched successfully");
         } else {
             notificationStore.addErrorNotification("Team not found");
         }
-    }   
+    }
 
-    function fetchTeamDates(){
+    async function fetchTeamDates(){
         if(isEmpty(teamRef, "Team")){
             return;
         }
-        getDoc(teamRef).then((doc) => {
-            if (doc.exists()) {
-                console.log("Document data:", doc.data());
-                notificationStore.addSuccessNotification("Team fetched successfully");
-            } else {
-                console.log("No such document!");
-                notificationStore.addErrorNotification("Team not found");
-            }
-        })
-        .catch((error) => {
-            console.error("Error getting document:", error);
-            notificationStore.addErrorNotification("Error fetching team");
-        });
+        dateRef = doc(collection(teamRef, "dates"));
+        if(await docExists(dateRef)){
+            notificationStore.addSuccessNotification("Dates fetched successfully");
+        } else {
+            // TODO: maybe add a check for todays date to add it in case its not there
+            //  but future dates couldnt be added
+            notificationStore.addErrorNotification("No dates found");
+        }
     }
 
     return {
