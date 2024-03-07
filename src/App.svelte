@@ -45,7 +45,7 @@
 </div>
 <!-- Toast notification system -->
 <div class="toast toast-top toast-end max-w-sm">
-  {#each $notificationStore as notification}
-    <NotificationToast {notification} />
+  {#each $notificationStore as notification, index}
+    <NotificationToast {notification} {index} />
   {/each}
 </div>
