@@ -11,7 +11,7 @@
   <div class="flex flex-row gap-2">
     <button
       class="btn btn-primary flex-auto w-0"
-      on:click={() => repository.fetchTeamByTeamName(teamName)}>Set team</button
+      on:click={() => repository.setTeamByTeamName(teamName)}>Set team</button
     >
     <button
       class="btn btn-primary flex-auto w-0"
