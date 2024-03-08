@@ -72,6 +72,8 @@ SOFTWARE.
 
 - [x] Add secrets to Firebase
 - [x] write code that generates toast messages for success, error and warning
+- [x] Define logic for setting the dates and teams
+- [x] Define logic for adding the dates and teams
 - [ ] Define logic for fetching the feelings
 - [ ] Add a way to share the feelings with the team
 - [ ] Add a way to visualize the feelings
