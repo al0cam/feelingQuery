@@ -7,8 +7,9 @@
     type: "success",
     message: "Message was a complete success",
     time: new Date(),
-    timeout: 5000,
+    timeout: 2000,
   };
+  export let index: number;
 
   let typeClass = "";
   let buttonClass = "";
@@ -38,7 +39,7 @@
   >
   <button
     class={`btn btn-square shadow-none ${buttonClass}`}
-    on:click={() => notificationStore.removeNotification(notification)}
+    on:click={() => notificationStore.removeNotification(notification, index)}
   >
     <img src={CancelIcon} alt="Remove icon" class="w-full h-full p-2" />
   </button>

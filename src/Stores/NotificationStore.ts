@@ -39,9 +39,16 @@ function createStore() {
     }
 
 
-    function removeNotification(notification: Notification){
+    function removeNotification(notification: Notification, index: number = -1){
         update((notifications) => {
-            notifications = notifications.filter((n) => n !== notification);
+            if(index > -1){
+                notifications.splice(index, 1);
+            } else {
+                const index = notifications.indexOf(notification);
+                if(index > -1){
+                    notifications.splice(index, 1);
+                }
+            }
             return notifications;
         });
     }
