@@ -1,12 +1,8 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import { repository } from "../Firebase/Repository";
+  import type { Feeling } from "../Models/Feeling";
 
   let currentDate = new Date();
-  type Feeling = {
-    name: string;
-    value: number;
-  };
 
   let feelings: Feeling[] = [
     { name: "Very kul", value: 6 },
