@@ -32,16 +32,15 @@ function createRepository(){
             return;
         }
 
-        setDoc(teamRef, { teamName: teamName, }, { merge: true } )
-        .then((docRef) => {
+        try {
+            await setDoc(teamRef, { teamName: teamName }, { merge: true });
             notificationStore.addSuccessNotification("Team added successfully");
-            addDate(new Date());
+            await addDate(new Date());
             return teamRef.id;
-        }
-        ).catch((error) => {
+        } catch (error) {
             notificationStore.addErrorNotification("Error adding team");
             console.error("Error adding document: ", error);
-        });
+        }
         return;
     }
     
@@ -66,22 +65,18 @@ function createRepository(){
         if(isEmpty(feeling, "Feeling") || isEmpty(dateRef, "Date") || isEmpty(teamRef, "Team")){
             return;
         }
-        async function addFeeling(feeling: number) {
-            if (isEmpty(feeling, "Feeling") || isEmpty(dateRef, "Date") || isEmpty(teamRef, "Team")) {
-                return;
-            }
+        
+        if(isEmpty(feeling, "Feeling") || isEmpty(dateRef, "Date") || isEmpty(teamRef, "Team")) {
+            return;
+        }
 
-            try {
-                const docRef = await addDoc(collection(dateRef, "feelings"), {
-                    feeling: feeling
-                });
-                feelingRef = docRef;
-                console.log("Document written with ID: ", docRef.id);
-                notificationStore.addSuccessNotification("Feeling added successfully");
-            } catch (error) {
-                notificationStore.addErrorNotification("Error adding feeling");
-                console.error("Error adding feeling: ", error);
-            }
+        try {
+            feelingRef = await addDoc(collection(dateRef, "feelings"), {
+                feeling: feeling
+            });
+            notificationStore.addSuccessNotification("Feeling added successfully");
+        } catch (error) {
+            notificationStore.addErrorNotification("Error adding feeling");
         }
     }
 
@@ -120,6 +115,15 @@ function createRepository(){
             notificationStore.addErrorNotification("No dates found");
         }
     }
+
+    // async function getTeams(){
+    //     let teams = [];
+    //     const querySnapshot = await getDoc(collection(db, "teams"));
+    //     querySnapshot.forEach((doc) => {
+    //         teams.push(doc.data());
+    //     });
+    //     return teams;
+    // }
 
     return {
         addTeam,
