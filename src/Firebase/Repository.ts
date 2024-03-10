@@ -1,6 +1,8 @@
-import { DocumentReference, addDoc, collection, doc, getDoc, setDoc } from "firebase/firestore";
+import { DocumentReference, addDoc, collection, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
 import db from "./Firebase";
 import { notificationStore } from "../Stores/NotificationStore";
+import type { Team } from "../Models/Team";
+import { teamStore } from "../Stores/TeamStore";
 
 function createRepository(){
 
@@ -36,6 +38,8 @@ function createRepository(){
             await setDoc(teamRef, { teamName: teamName }, { merge: true });
             notificationStore.addSuccessNotification("Team added successfully");
             await addDate(new Date());
+            
+            teamStore.set({teamName: teamName, teamRef: teamRef} as Team);
             return teamRef.id;
         } catch (error) {
             notificationStore.addErrorNotification("Error adding team");
@@ -116,14 +120,36 @@ function createRepository(){
         }
     }
 
-    // async function getTeams(){
-    //     let teams = [];
-    //     const querySnapshot = await getDoc(collection(db, "teams"));
-    //     querySnapshot.forEach((doc) => {
-    //         teams.push(doc.data());
-    //     });
-    //     return teams;
-    // }
+    async function getTeams(){
+        let teams: Team[] = [];
+        const teamsRef = collection(db, "teams");
+        const teamsSnapshot = await getDocs(teamsRef);
+        try {
+            teamsSnapshot.forEach((doc) => {
+                teams.push({teamName: doc.id, teamRef: doc.ref} as Team);
+            });
+            notificationStore.addSuccessNotification("Teams retrieved successfully");
+            return teams;
+        } catch (error) {
+            notificationStore.addErrorNotification("Error getting teams");
+        }
+    }
+
+    async function getDatesForTeam(teamName: string){
+        let dates: Date[] = [];
+        let teamRef = doc(db, "teams", teamName);
+        const datesRef = collection(teamRef, "dates");
+        const datesSnapshot = await getDocs(datesRef);
+        try {
+            datesSnapshot.forEach((doc) => {
+                dates.push(doc.data().date);
+            });
+            notificationStore.addSuccessNotification("Dates retrieved successfully");
+            return dates;
+        } catch (error) {
+            notificationStore.addErrorNotification("Error getting dates");
+        }
+    }
 
     return {
         addTeam,
@@ -131,6 +157,7 @@ function createRepository(){
         addFeeling,
         setTeamByTeamName,
         setTeamDates,
+        getTeams
     }
 }
 

@@ -10,7 +10,7 @@
   <input class="input w-fill" bind:value={teamRef} />
   <button
     class="btn btn-primary"
-    on:click={() => repository.fetchTeamByName(teamRef)}>Set team</button
+    on:click={() => repository.setTeamByTeamName(teamRef)}>Set team</button
   >
 </div>
 
@@ -19,6 +19,10 @@
   <input type="date" class="input w-fill" bind:value={teamRef} />
   <button
     class="btn btn-primary"
-    on:click={() => repository.fetchTeamByName(teamRef)}>Get feelings</button
+    on:click={() => repository.setTeamByTeamName(teamRef)}>Get feelings</button
   >
 </div>
+
+<button class="btn btn-primary" on:click={() => repository.getTeams()}
+  >Get teams</button
+>
