@@ -135,9 +135,19 @@ function createRepository(){
         }
     }
 
-    async function getDatesForTeam(teamName: string){
+    async function getDatesForTeam(){
+        if(isEmpty(teamRef, "Team")){
+            return;
+        }
         let dates: Date[] = [];
-        let teamRef = doc(db, "teams", teamName);
+        let teamName: string = "";
+        teamStore.subscribe((team) => {
+            teamName = team.teamName;
+        });
+
+        // TODO: find a way to get the dates and connect them to the team store.
+        // maybe the team store isn't necessary at all though
+        teamRef = doc(db, "teams", teamName);
         const datesRef = collection(teamRef, "dates");
         const datesSnapshot = await getDocs(datesRef);
         try {
