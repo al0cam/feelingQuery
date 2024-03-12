@@ -3,6 +3,8 @@ import db from "./Firebase";
 import { notificationStore } from "../Stores/NotificationStore";
 import type { Team } from "../Models/Team";
 import { teamStore } from "../Stores/TeamStore";
+import type { DateModel } from "../Models/DateModel";
+
 
 function createRepository(){
 
@@ -92,10 +94,10 @@ function createRepository(){
         teamRef = doc(db, "teams", teamName);
         if(await docExists(teamRef)){
             notificationStore.addSuccessNotification("Team set successfully");
+            teamStore.set({teamName: teamName, teamRef: teamRef} as Team);
             let date = new Date();
             if(await docExists(doc(teamRef, "dates", date.toLocaleDateString("de-DE")))){
                 await setTeamDates();
-                console.log("cancer");
                 
             }
             else {
@@ -139,7 +141,7 @@ function createRepository(){
         if(isEmpty(teamRef, "Team")){
             return;
         }
-        let dates: Date[] = [];
+        let dates: DateModel[] = [];
         let teamName: string = "";
         teamStore.subscribe((team) => {
             teamName = team.teamName;
@@ -152,13 +154,14 @@ function createRepository(){
         const datesSnapshot = await getDocs(datesRef);
         try {
             datesSnapshot.forEach((doc) => {
-                dates.push(doc.data().date);
+                dates.push({date: new Date(doc.id), dateRef: doc.ref} as DateModel);
             });
             notificationStore.addSuccessNotification("Dates retrieved successfully");
             return dates;
         } catch (error) {
             notificationStore.addErrorNotification("Error getting dates");
         }
+        teamStore.set
     }
 
     return {
@@ -167,7 +170,8 @@ function createRepository(){
         addFeeling,
         setTeamByTeamName,
         setTeamDates,
-        getTeams
+        getTeams,
+        getDatesForTeam
     }
 }
 

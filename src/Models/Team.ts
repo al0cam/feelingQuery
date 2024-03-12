@@ -1,8 +1,8 @@
 import type { DocumentReference } from "firebase/firestore";
-import type { Date } from "./Date";
+import type { DateModel } from "./DateModel";
 
 export type Team = {
     teamName: string;
     teamRef: DocumentReference;
-    dates: Date[];
+    dates: DateModel[];
 }

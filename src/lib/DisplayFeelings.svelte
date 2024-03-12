@@ -26,3 +26,6 @@
 <button class="btn btn-primary" on:click={() => repository.getTeams()}
   >Get teams</button
 >
+<button class="btn btn-primary" on:click={() => repository.getDatesForTeam()}
+  >Get teams</button
+>
