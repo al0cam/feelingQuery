@@ -14,10 +14,23 @@ function createStore() {
         });
     }
 
+    function setFeelingsForDate(feelings: string[], date: DateModel) {
+        update(team => {
+            let newDates = team.dates.map(d => {
+                if(d.date === date.date) {
+                    return {...d, feelings: feelings};
+                }
+                return d;
+            });
+            return {...team, dates: newDates};
+        });
+    }
+
     return {
         subscribe,
         set,
         update,
+        setDates
     }
 }
 

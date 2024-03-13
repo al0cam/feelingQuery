@@ -4,6 +4,8 @@ import { notificationStore } from "../Stores/NotificationStore";
 import type { Team } from "../Models/Team";
 import { teamStore } from "../Stores/TeamStore";
 import type { DateModel } from "../Models/DateModel";
+import type { Feeling } from "../Models/Feeling";
+import { FeelingEnum } from "../Enums/FeelingEnum";
 
 
 function createRepository(){
@@ -55,12 +57,12 @@ function createRepository(){
         if(isEmpty(date, "Date") || isEmpty(teamRef, "Team")){
             return;
         }
+        dateRef = doc(teamRef, "dates", date.toLocaleDateString("de-DE"));
         try {
-            await setDoc(doc(teamRef, "dates", date.toLocaleDateString("de-DE")), 
+            await setDoc(dateRef, 
                 { date: date }, 
                 { merge: true });
             notificationStore.addSuccessNotification("Date added successfully");
-            dateRef = doc(collection(teamRef, "dates"));
         } catch (error) {
             console.error("Error writing document: ", error);
             notificationStore.addErrorNotification("Error adding date");
@@ -77,13 +79,25 @@ function createRepository(){
         }
 
         try {
-            feelingRef = await addDoc(collection(dateRef, "feelings"), {
-                feeling: feeling
-            });
+            await setDoc(dateRef, 
+                { feeling: FeelingEnum[feeling].name }, 
+                { merge: true });
             notificationStore.addSuccessNotification("Feeling added successfully");
-        } catch (error) {
+        }
+        catch (error) {
+            console.error("Error writing document: ", error);
             notificationStore.addErrorNotification("Error adding feeling");
         }
+
+
+        // feelingRef = doc(dateRef, "feelings", FeelingEnum[feeling].name);
+        // try {
+        //     await setDoc(feelingRef, { feeling: FeelingEnum[feeling].name });
+        //     notificationStore.addSuccessNotification("Feeling added successfully");
+        // } catch (error) {
+        //     console.error("Error writing document: ", error);
+        //     notificationStore.addErrorNotification("Error adding feeling");
+        // }
     }
 
     async function setTeamByTeamName(teamName: string) {
@@ -147,8 +161,6 @@ function createRepository(){
             teamName = team.teamName;
         });
 
-        // TODO: find a way to get the dates and connect them to the team store.
-        // maybe the team store isn't necessary at all though
         teamRef = doc(db, "teams", teamName);
         const datesRef = collection(teamRef, "dates");
         const datesSnapshot = await getDocs(datesRef);
@@ -156,13 +168,31 @@ function createRepository(){
             datesSnapshot.forEach((doc) => {
                 dates.push({date: new Date(doc.id), dateRef: doc.ref} as DateModel);
             });
+            teamStore.setDates(dates);
             notificationStore.addSuccessNotification("Dates retrieved successfully");
             return dates;
         } catch (error) {
             notificationStore.addErrorNotification("Error getting dates");
         }
-        teamStore.set
     }
+
+    // async function getFeelingsForDate(date: DateModel){
+    //     if(isEmpty(date, "Date")){
+    //         return;
+    //     }
+    //     let feelings: Feeling[] = [];
+    //     const feelingsRef = collection(date.dateRef, "feelings");
+    //     const feelingsSnapshot = await getDocs(feelingsRef);
+    //     try {
+    //         feelingsSnapshot.forEach((doc) => {
+    //             feelings.push({feeling: doc.data().feeling} as Feeling);
+    //         });
+    //         notificationStore.addSuccessNotification("Feelings retrieved successfully");
+    //         return feelings;
+    //     } catch (error) {
+    //         notificationStore.addErrorNotification("Error getting feelings");
+    //     }
+    // }
 
     return {
         addTeam,

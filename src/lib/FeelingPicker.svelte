@@ -1,19 +1,11 @@
 <script lang="ts">
+  import { FeelingEnum } from "../Enums/FeelingEnum";
   import { repository } from "../Firebase/Repository";
   import type { Feeling } from "../Models/Feeling";
 
   let currentDate = new Date();
 
-  let feelings: Feeling[] = [
-    { name: "Very kul", value: 6 },
-    { name: "Kul", value: 5 },
-    { name: "Ok", value: 4 },
-    { name: "Meh", value: 3 },
-    { name: "Kinda Down", value: 2 },
-    { name: "Down", value: 1 },
-  ];
-
-  let selectedFeeligns: Feeling = feelings[0];
+  let selectedFeeligns: Feeling = FeelingEnum[0];
   // $: console.log(selectedFeeligns);
 </script>
 
@@ -22,7 +14,7 @@
     How do you feel today? {currentDate.toLocaleDateString("de-DE")}
   </h1>
   <div>
-    {#each feelings as feeling}
+    {#each FeelingEnum as feeling}
       <div class="form-control">
         <label class="label cursor-pointer">
           <span class="label-text">{feeling.name}</span>
