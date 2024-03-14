@@ -5,8 +5,8 @@
 
   let currentDate = new Date();
 
-  let selectedFeeligns: Feeling = FeelingEnum[0];
-  // $: console.log(selectedFeeligns);
+  let selectedFeelings: Feeling = FeelingEnum[0];
+  // $: console.log(selectedFeelings);
 </script>
 
 <div class="m-3 flex flex-col gap-4">
@@ -22,8 +22,8 @@
             type="radio"
             name="radio-10"
             class="radio"
-            checked={selectedFeeligns === feeling}
-            on:change={() => (selectedFeeligns = feeling)}
+            checked={selectedFeelings === feeling}
+            on:change={() => (selectedFeelings = feeling)}
           />
         </label>
       </div>
@@ -31,7 +31,7 @@
   </div>
   <button
     class="btn btn-primary"
-    on:click={() => repository.addFeeling(selectedFeeligns.value)}
+    on:click={() => repository.addFeeling(selectedFeelings)}
   >
     Submit
   </button>

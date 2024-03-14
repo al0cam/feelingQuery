@@ -6,14 +6,14 @@ import { teamStore } from "../Stores/TeamStore";
 import type { DateModel } from "../Models/DateModel";
 import type { Feeling } from "../Models/Feeling";
 import { FeelingEnum } from "../Enums/FeelingEnum";
+import { feelingStore } from "../Stores/FeelingStore";
 
 
 function createRepository(){
 
     let teamRef: DocumentReference;
-    let dateRef: DocumentReference;
-    let feelingRef: DocumentReference;
-
+    let todayDateRef: DocumentReference;
+    // TODO: add todays date for feeling addition
 
     function isEmpty(value: any, type: string){
         if(value === undefined || value === null || value === ""){
@@ -57,6 +57,7 @@ function createRepository(){
         if(isEmpty(date, "Date") || isEmpty(teamRef, "Team")){
             return;
         }
+
         dateRef = doc(teamRef, "dates", date.toLocaleDateString("de-DE"));
         try {
             await setDoc(dateRef, 
@@ -69,7 +70,7 @@ function createRepository(){
         }
     }
 
-    async function addFeeling(feeling: number){
+    async function addFeeling(feeling: Feeling, date: DateModel){
         if(isEmpty(feeling, "Feeling") || isEmpty(dateRef, "Date") || isEmpty(teamRef, "Team")){
             return;
         }
@@ -79,25 +80,13 @@ function createRepository(){
         }
 
         try {
-            await setDoc(dateRef, 
-                { feeling: FeelingEnum[feeling].name }, 
-                { merge: true });
+            const docRef = await addDoc(collection(date.dateRef, "feelings"), feeling);
+            teamStore.addFeelingForDate(feeling, date);
             notificationStore.addSuccessNotification("Feeling added successfully");
-        }
-        catch (error) {
+        } catch (error) {
             console.error("Error writing document: ", error);
             notificationStore.addErrorNotification("Error adding feeling");
         }
-
-
-        // feelingRef = doc(dateRef, "feelings", FeelingEnum[feeling].name);
-        // try {
-        //     await setDoc(feelingRef, { feeling: FeelingEnum[feeling].name });
-        //     notificationStore.addSuccessNotification("Feeling added successfully");
-        // } catch (error) {
-        //     console.error("Error writing document: ", error);
-        //     notificationStore.addErrorNotification("Error adding feeling");
-        // }
     }
 
     async function setTeamByTeamName(teamName: string) {
