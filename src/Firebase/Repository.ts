@@ -6,14 +6,14 @@ import { teamStore } from "../Stores/TeamStore";
 import type { DateModel } from "../Models/DateModel";
 import type { Feeling } from "../Models/Feeling";
 import { FeelingEnum } from "../Enums/FeelingEnum";
-import { feelingStore } from "../Stores/FeelingStore";
-
 
 function createRepository(){
 
-    let teamRef: DocumentReference;
-    let todayDateRef: DocumentReference;
-    // TODO: add todays date for feeling addition
+    let team: Team;
+    teamStore.subscribe((teamData) => {
+        team = teamData;
+    });
+    let todayDate: DateModel;
 
     function isEmpty(value: any, type: string){
         if(value === undefined || value === null || value === ""){
@@ -31,7 +31,7 @@ function createRepository(){
         if(isEmpty(teamName, "Team")){
             return;
         }
-        teamRef = doc(db, "teams", teamName);
+        let teamRef = doc(db, "teams", teamName);
 
         if(await docExists(teamRef)){
             notificationStore.addErrorNotification("Team already exists");
@@ -54,13 +54,13 @@ function createRepository(){
     
     // add a subcollection for the dates which will then contain feelings
     async function addDate(date: Date){
-        if(isEmpty(date, "Date") || isEmpty(teamRef, "Team")){
+        if(isEmpty(date, "Date") || isEmpty(team.teamRef, "Team")){
             return;
         }
 
-        dateRef = doc(teamRef, "dates", date.toLocaleDateString("de-DE"));
+        let todayDateRef = doc(team.teamRef, "dates", date.toLocaleDateString("de-DE"));
         try {
-            await setDoc(dateRef, 
+            await setDoc(todayDateRef, 
                 { date: date }, 
                 { merge: true });
             notificationStore.addSuccessNotification("Date added successfully");
@@ -71,11 +71,11 @@ function createRepository(){
     }
 
     async function addFeeling(feeling: Feeling, date: DateModel){
-        if(isEmpty(feeling, "Feeling") || isEmpty(dateRef, "Date") || isEmpty(teamRef, "Team")){
+        if(isEmpty(feeling, "Feeling") || isEmpty(todayDate.dateRef, "Date") || isEmpty(team.teamRef, "Team")){
             return;
         }
         
-        if(isEmpty(feeling, "Feeling") || isEmpty(dateRef, "Date") || isEmpty(teamRef, "Team")) {
+        if(isEmpty(feeling, "Feeling") || isEmpty(todayDate.dateRef, "Date") || isEmpty(team.teamRef, "Team")) {
             return;
         }
 
@@ -94,7 +94,7 @@ function createRepository(){
         if(isEmpty(teamName, "Team")){
             return;
         }
-        teamRef = doc(db, "teams", teamName);
+        let teamRef = doc(db, "teams", teamName);
         if(await docExists(teamRef)){
             notificationStore.addSuccessNotification("Team set successfully");
             teamStore.set({teamName: teamName, teamRef: teamRef} as Team);
@@ -112,11 +112,12 @@ function createRepository(){
     }
 
     async function setTeamDates(date: Date = new Date()){
-        if(isEmpty(teamRef, "Team")){
+        // TODO: add two dates which will be used for displaying of a graph between the two dates
+        if(isEmpty(team.teamRef, "Team")){
             return;
         }
-        dateRef = doc(teamRef, "dates", date.toLocaleDateString("de-DE"));
-        if(await docExists(dateRef)){
+        let todayDateRef = doc(team.teamRef, "dates", date.toLocaleDateString("de-DE"));
+        if(await docExists(todayDateRef)){
             notificationStore.addSuccessNotification("Dates set successfully");
         } else {
             // TODO: maybe add a check for todays date to add it in case its not there
@@ -141,7 +142,7 @@ function createRepository(){
     }
 
     async function getDatesForTeam(){
-        if(isEmpty(teamRef, "Team")){
+        if(isEmpty(team.teamRef, "Team")){
             return;
         }
         let dates: DateModel[] = [];
@@ -150,7 +151,7 @@ function createRepository(){
             teamName = team.teamName;
         });
 
-        teamRef = doc(db, "teams", teamName);
+        let teamRef = doc(db, "teams", teamName);
         const datesRef = collection(teamRef, "dates");
         const datesSnapshot = await getDocs(datesRef);
         try {
