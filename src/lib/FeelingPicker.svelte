@@ -31,7 +31,7 @@
   </div>
   <button
     class="btn btn-primary"
-    on:click={() => repository.addFeeling(selectedFeelings)}
+    on:click={() => repository.addFeelingForDate(selectedFeelings)}
   >
     Submit
   </button>

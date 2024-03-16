@@ -28,6 +28,9 @@ function createRepository(){
     }
 
     async function addTeam(teamName: string){
+        console.log("cancer1");
+        // TODO: figure out why this isnt displayed one ran
+        
         if(isEmpty(teamName, "Team")){
             return;
         }
@@ -37,6 +40,8 @@ function createRepository(){
             notificationStore.addErrorNotification("Team already exists");
             return;
         }
+        console.log("cancer");
+        
 
         try {
             await setDoc(teamRef, { teamName: teamName }, { merge: true });
@@ -59,10 +64,20 @@ function createRepository(){
         }
 
         let todayDateRef = doc(team.teamRef, "dates", date.toLocaleDateString("de-DE"));
+        if(await docExists(todayDateRef)){
+            notificationStore.addErrorNotification("Team already exists");
+            return;
+        }
+
+
+        console.log("cancer");
         try {
             await setDoc(todayDateRef, 
                 { date: date }, 
                 { merge: true });
+            todayDate = {date: date, dateRef: todayDateRef} as DateModel;
+            console.log(todayDate);
+            
             notificationStore.addSuccessNotification("Date added successfully");
         } catch (error) {
             console.error("Error writing document: ", error);
@@ -70,7 +85,7 @@ function createRepository(){
         }
     }
 
-    async function addFeeling(feeling: Feeling, date: DateModel){
+    async function addFeelingForDate(feeling: Feeling, date: DateModel = todayDate){
         if(isEmpty(feeling, "Feeling") || isEmpty(todayDate.dateRef, "Date") || isEmpty(team.teamRef, "Team")){
             return;
         }
@@ -80,7 +95,7 @@ function createRepository(){
         }
 
         try {
-            const docRef = await addDoc(collection(date.dateRef, "feelings"), feeling);
+            feeling.feelingRef = await addDoc(collection(date.dateRef, "feelings"), feeling);
             teamStore.addFeelingForDate(feeling, date);
             notificationStore.addSuccessNotification("Feeling added successfully");
         } catch (error) {
@@ -170,12 +185,13 @@ function createRepository(){
     //     if(isEmpty(date, "Date")){
     //         return;
     //     }
+        
     //     let feelings: Feeling[] = [];
     //     const feelingsRef = collection(date.dateRef, "feelings");
     //     const feelingsSnapshot = await getDocs(feelingsRef);
     //     try {
     //         feelingsSnapshot.forEach((doc) => {
-    //             feelings.push({feeling: doc.data().feeling} as Feeling);
+    //             feelings.push({name: doc.data(), value: doc.data().value, feelingRef: doc.ref} as Feeling);
     //         });
     //         notificationStore.addSuccessNotification("Feelings retrieved successfully");
     //         return feelings;
@@ -187,7 +203,7 @@ function createRepository(){
     return {
         addTeam,
         addDate,
-        addFeeling,
+        addFeelingForDate,
         setTeamByTeamName,
         setTeamDates,
         getTeams,
