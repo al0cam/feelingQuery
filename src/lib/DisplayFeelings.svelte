@@ -1,5 +1,6 @@
 <script lang="ts">
   import { repository } from "../Firebase/Repository";
+  import { teamStore } from "../Stores/TeamStore";
 
   let date = new Date();
   let teamRef = "";
@@ -27,5 +28,11 @@
   >Get teams</button
 >
 <button class="btn btn-primary" on:click={() => repository.getDatesForTeam()}
-  >Get teams</button
+  >Get dates</button
 >
+
+{#if $teamStore && $teamStore.dates != null}
+  {#each $teamStore.dates as date}
+    <span> {date.date.toLocaleDateString("de-DE")} </span>
+  {/each}
+{/if}

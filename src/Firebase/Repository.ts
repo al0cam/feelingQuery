@@ -28,9 +28,6 @@ function createRepository(){
     }
 
     async function addTeam(teamName: string){
-        console.log("cancer1");
-        // TODO: figure out why this isnt displayed one ran
-        
         if(isEmpty(teamName, "Team")){
             return;
         }
@@ -59,15 +56,19 @@ function createRepository(){
     
     // add a subcollection for the dates which will then contain feelings
     async function addDate(date: Date){
+        // TODO: add a date format which will be unique so there is no duplicate date in the database
+        // TOOD: figure out why sometimes the console log works and sometimes not in async await functions
         if(isEmpty(date, "Date") || isEmpty(team.teamRef, "Team")){
             return;
         }
 
-        let todayDateRef = doc(team.teamRef, "dates", date.toLocaleDateString("de-DE"));
+        let todayDateRef = doc(team.teamRef, "dates", date.toISOString());
         if(await docExists(todayDateRef)){
             notificationStore.addErrorNotification("Team already exists");
             return;
         }
+        console.log(todayDateRef);
+        
 
 
         console.log("cancer");
