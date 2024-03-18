@@ -15,6 +15,10 @@ function createRepository(){
     });
     let todayDate: DateModel;
 
+    function getOnlyDate(date: Date) {
+        return date.toISOString().split("T")[0];
+    }
+
     function isEmpty(value: any, type: string){
         if(value === undefined || value === null || value === ""){
             notificationStore.addErrorNotification(type + " cannot be empty!");
@@ -38,13 +42,12 @@ function createRepository(){
             return;
         }
         console.log("cancer");
-        
 
         try {
             await setDoc(teamRef, { teamName: teamName }, { merge: true });
             notificationStore.addSuccessNotification("Team added successfully");
             await addDate(new Date());
-            
+
             teamStore.set({teamName: teamName, teamRef: teamRef} as Team);
             return teamRef.id;
         } catch (error) {
@@ -53,32 +56,28 @@ function createRepository(){
         }
         return;
     }
-    
-    // add a subcollection for the dates which will then contain feelings
+
     async function addDate(date: Date){
-        // TODO: add a date format which will be unique so there is no duplicate date in the database
-        // TOOD: figure out why sometimes the console log works and sometimes not in async await functions
         if(isEmpty(date, "Date") || isEmpty(team.teamRef, "Team")){
             return;
         }
 
-        let todayDateRef = doc(team.teamRef, "dates", date.toISOString());
+        let todayDateRef = doc(team.teamRef, "dates", getOnlyDate(date));
         if(await docExists(todayDateRef)){
-            notificationStore.addErrorNotification("Team already exists");
+            notificationStore.addErrorNotification("Date already exists");
             return;
         }
         console.log(todayDateRef);
-        
 
 
         console.log("cancer");
         try {
-            await setDoc(todayDateRef, 
-                { date: date }, 
+            await setDoc(todayDateRef,
+                { date: date },
                 { merge: true });
             todayDate = {date: date, dateRef: todayDateRef} as DateModel;
             console.log(todayDate);
-            
+
             notificationStore.addSuccessNotification("Date added successfully");
         } catch (error) {
             console.error("Error writing document: ", error);
@@ -90,7 +89,7 @@ function createRepository(){
         if(isEmpty(feeling, "Feeling") || isEmpty(todayDate.dateRef, "Date") || isEmpty(team.teamRef, "Team")){
             return;
         }
-        
+
         if(isEmpty(feeling, "Feeling") || isEmpty(todayDate.dateRef, "Date") || isEmpty(team.teamRef, "Team")) {
             return;
         }
@@ -117,7 +116,7 @@ function createRepository(){
             let date = new Date();
             if(await docExists(doc(teamRef, "dates", date.toLocaleDateString("de-DE")))){
                 await setTeamDates();
-                
+
             }
             else {
                 await addDate(date);
@@ -186,7 +185,7 @@ function createRepository(){
     //     if(isEmpty(date, "Date")){
     //         return;
     //     }
-        
+
     //     let feelings: Feeling[] = [];
     //     const feelingsRef = collection(date.dateRef, "feelings");
     //     const feelingsSnapshot = await getDocs(feelingsRef);
