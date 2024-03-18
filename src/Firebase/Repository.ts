@@ -15,11 +15,25 @@ function createRepository(){
     });
     let todayDate: DateModel;
 
+    function isDateInStore(date: Date) {
+        team.dates.forEach((d) => {
+            if(d.date === date){
+                todayDate = d;
+                return true;
+            }
+        }
+        );
+    }
+
+    function isDateCached(date: Date) {
+        return !isEmpty(todayDate, "Date") && todayDate.date === date && isDateInStore(date);
+    }
+
     function isTeamCached(teamName: string) {
         return !isEmpty(team, "Team") && team.teamName === teamName;
     }
 
-    function getOnlyDate(date: Date) {
+    function getFormatedDate(date: Date) {
         return date.toISOString().split("T")[0];
     }
 
@@ -73,7 +87,12 @@ function createRepository(){
             return;
         }
 
-        let todayDateRef = doc(team.teamRef, "dates", getOnlyDate(date));
+        if(isDateCached(date)){
+            notificationStore.addInfoNotification("Date was already fetched");
+            return;
+        }
+
+        let todayDateRef = doc(team.teamRef, "dates", getFormatedDate(date));
         if(await docExists(todayDateRef)){
             notificationStore.addErrorNotification("Date already exists");
             return;
@@ -171,10 +190,12 @@ function createRepository(){
         }
     }
 
+    // TODO: define a way to check if the date is already in the store
     async function getDatesForTeam(){
         if(isEmptyWithNotification(team.teamRef, "Team")){
             return;
         }
+
         let dates: DateModel[] = [];
         let teamName: string = "";
         teamStore.subscribe((team) => {
