@@ -16,7 +16,7 @@
     },
   ];
 
-  let currentTab = 0;
+  let currentTab = 1;
 </script>
 
 <div class="bg-gray-700 min-h-screen min-w-screen">

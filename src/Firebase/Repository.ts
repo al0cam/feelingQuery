@@ -5,7 +5,6 @@ import type { Team } from "../Models/Team";
 import { teamStore } from "../Stores/TeamStore";
 import type { DateModel } from "../Models/DateModel";
 import type { Feeling } from "../Models/Feeling";
-import { FeelingEnum } from "../Enums/FeelingEnum";
 
 function createRepository(){
 
@@ -86,7 +85,6 @@ function createRepository(){
         if(isEmptyWithNotification(date, "Date") || isEmptyWithNotification(team.teamRef, "Team")){
             return;
         }
-
         if(isDateCached(date)){
             notificationStore.addInfoNotification("Date was already fetched");
             return;
@@ -115,10 +113,6 @@ function createRepository(){
 
     async function addFeelingForDate(feeling: Feeling, date: DateModel = todayDate){
         if(isEmptyWithNotification(feeling, "Feeling") || isEmptyWithNotification(todayDate.dateRef, "Date") || isEmptyWithNotification(team.teamRef, "Team")){
-            return;
-        }
-
-        if(isEmptyWithNotification(feeling, "Feeling") || isEmptyWithNotification(todayDate.dateRef, "Date") || isEmptyWithNotification(team.teamRef, "Team")) {
             return;
         }
 
@@ -197,12 +191,8 @@ function createRepository(){
         }
 
         let dates: DateModel[] = [];
-        let teamName: string = "";
-        teamStore.subscribe((team) => {
-            teamName = team.teamName;
-        });
 
-        let teamRef = doc(db, "teams", teamName);
+        let teamRef = doc(db, "teams", team.teamName);
         const datesRef = collection(teamRef, "dates");
         const datesSnapshot = await getDocs(datesRef);
         try {
@@ -217,24 +207,49 @@ function createRepository(){
         }
     }
 
-    // async function getFeelingsForDate(date: DateModel){
-    //     if(isEmpty(date, "Date")){
-    //         return;
-    //     }
+    async function getDateForTeam(date: Date){
+        if(isEmpty(date, "Date") || isEmptyWithNotification(team.teamRef, "Team")){
+            return;
+        }
+        if(isDateCached(date)){
+            notificationStore.addInfoNotification("Date was already fetched");
+            return;
+        }
 
-    //     let feelings: Feeling[] = [];
-    //     const feelingsRef = collection(date.dateRef, "feelings");
-    //     const feelingsSnapshot = await getDocs(feelingsRef);
-    //     try {
-    //         feelingsSnapshot.forEach((doc) => {
-    //             feelings.push({name: doc.data(), value: doc.data().value, feelingRef: doc.ref} as Feeling);
-    //         });
-    //         notificationStore.addSuccessNotification("Feelings retrieved successfully");
-    //         return feelings;
-    //     } catch (error) {
-    //         notificationStore.addErrorNotification("Error getting feelings");
-    //     }
-    // }
+        let dateRef = doc(db, "teams", team.teamName, "dates", getFormatedDate(date));
+        const dateSnapshot = await getDoc(dateRef);
+        try {
+            notificationStore.addSuccessNotification("Date retrieved successfully");
+            teamStore.addDate({date: date, dateRef: dateRef} as DateModel);
+            return dateSnapshot;
+        } catch (error) {
+            notificationStore.addErrorNotification("Error getting date");
+        }
+    }
+
+    async function getFeelingsForDate(date: Date){
+        if(isEmpty(date, "Date")){
+            return;
+        }
+        if(isEmptyWithNotification(team.teamRef, "Team")){
+            return;
+        }
+
+        let dateRef = doc(db, "teams", team.teamName, "dates", getFormatedDate(date));
+
+        let feelings: Feeling[] = [];
+        const feelingsRef = collection(dateRef, "feelings");
+        const feelingsSnapshot = await getDocs(feelingsRef);
+        try {
+            feelingsSnapshot.forEach((doc) => {
+                feelings.push({name: doc.data().name, value: doc.data().value, feelingRef: doc.ref} as Feeling);
+            });
+            notificationStore.addSuccessNotification("Feelings retrieved successfully");
+            return feelings;
+        } catch (error) {
+            notificationStore.addErrorNotification("Error getting feelings");
+        }
+    }
 
     return {
         addTeam,
@@ -243,7 +258,8 @@ function createRepository(){
         setTeamByTeamName,
         setTeamDates,
         getTeams,
-        getDatesForTeam
+        getDatesForTeam,
+        getFeelingsForDate
     }
 }
 

@@ -6,6 +6,7 @@
   let teamRef = "";
 </script>
 
+<!-- TODO: add a calender which is colored by the dates which are added and add shades of colors according to the feelings for example or by the submit occurance -->
 <div class="flex flex-col gap-1 w-full">
   <h1 class="text-2xl">Set team</h1>
   <input class="input w-fill" bind:value={teamRef} />
@@ -18,9 +19,10 @@
 <div class="flex flex-col gap-1 w-full">
   <h1 class="text-2xl">Set date</h1>
   <input type="date" class="input w-fill" bind:value={teamRef} />
+  <!-- TODO: fix getFeelingForDate so that it works with DateModel -->
   <button
     class="btn btn-primary"
-    on:click={() => repository.setTeamByTeamName(teamRef)}>Get feelings</button
+    on:click={() => repository.getFeelingsForDate(date)}>Get feelings</button
   >
 </div>
 

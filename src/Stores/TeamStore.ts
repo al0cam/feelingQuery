@@ -15,6 +15,12 @@ function createStore() {
         });
     }
 
+    function addDate(date: DateModel) {
+        update(team => {
+            return {...team, dates: [...team.dates, date]};
+        });
+    }
+
     function setFeelingsForDate(feelings: Feeling[], date: DateModel) {
         update(team => {
             let newDates = team.dates.map((d) => {
@@ -46,6 +52,7 @@ function createStore() {
         set,
         update,
         setDates,
+        addDate,
         setFeelingsForDate,
         addFeelingForDate
     }
