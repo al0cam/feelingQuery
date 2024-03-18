@@ -15,15 +15,23 @@ function createRepository(){
     });
     let todayDate: DateModel;
 
+    function isTeamCached(teamName: string) {
+        return !isEmpty(team, "Team") && team.teamName === teamName;
+    }
+
     function getOnlyDate(date: Date) {
         return date.toISOString().split("T")[0];
     }
 
-    function isEmpty(value: any, type: string){
-        if(value === undefined || value === null || value === ""){
-            notificationStore.addErrorNotification(type + " cannot be empty!");
+    function isEmptyWithNotification(value: any, type: string){
+        if(isEmpty(value, type)){
+            notificationStore.addErrorNotification(`${type} is empty`);
             return true;
         }
+    }
+
+    function isEmpty(value: any, type: string){
+        return value === undefined || value === null || value === "" || value.length === 0;
     }
 
     async function docExists(doc: DocumentReference): Promise<boolean> {
@@ -32,16 +40,20 @@ function createRepository(){
     }
 
     async function addTeam(teamName: string){
-        if(isEmpty(teamName, "Team")){
+        if(isEmptyWithNotification(teamName, "Team")){
             return;
         }
+        if(isTeamCached(teamName)){
+            notificationStore.addInfoNotification("Team was already fetched");
+            return;
+        }
+
         let teamRef = doc(db, "teams", teamName);
 
         if(await docExists(teamRef)){
             notificationStore.addErrorNotification("Team already exists");
             return;
         }
-        console.log("cancer");
 
         try {
             await setDoc(teamRef, { teamName: teamName }, { merge: true });
@@ -54,11 +66,10 @@ function createRepository(){
             notificationStore.addErrorNotification("Error adding team");
             console.error("Error adding document: ", error);
         }
-        return;
     }
 
     async function addDate(date: Date){
-        if(isEmpty(date, "Date") || isEmpty(team.teamRef, "Team")){
+        if(isEmptyWithNotification(date, "Date") || isEmptyWithNotification(team.teamRef, "Team")){
             return;
         }
 
@@ -69,14 +80,12 @@ function createRepository(){
         }
         console.log(todayDateRef);
 
-
-        console.log("cancer");
         try {
             await setDoc(todayDateRef,
                 { date: date },
                 { merge: true });
             todayDate = {date: date, dateRef: todayDateRef} as DateModel;
-            console.log(todayDate);
+            console.log("today: " + todayDate.date);
 
             notificationStore.addSuccessNotification("Date added successfully");
         } catch (error) {
@@ -86,11 +95,11 @@ function createRepository(){
     }
 
     async function addFeelingForDate(feeling: Feeling, date: DateModel = todayDate){
-        if(isEmpty(feeling, "Feeling") || isEmpty(todayDate.dateRef, "Date") || isEmpty(team.teamRef, "Team")){
+        if(isEmptyWithNotification(feeling, "Feeling") || isEmptyWithNotification(todayDate.dateRef, "Date") || isEmptyWithNotification(team.teamRef, "Team")){
             return;
         }
 
-        if(isEmpty(feeling, "Feeling") || isEmpty(todayDate.dateRef, "Date") || isEmpty(team.teamRef, "Team")) {
+        if(isEmptyWithNotification(feeling, "Feeling") || isEmptyWithNotification(todayDate.dateRef, "Date") || isEmptyWithNotification(team.teamRef, "Team")) {
             return;
         }
 
@@ -109,6 +118,12 @@ function createRepository(){
         if(isEmpty(teamName, "Team")){
             return;
         }
+
+        if(isTeamCached(teamName)){
+            notificationStore.addInfoNotification("Team was already fetched");
+            return;
+        }
+
         let teamRef = doc(db, "teams", teamName);
         if(await docExists(teamRef)){
             notificationStore.addSuccessNotification("Team set successfully");
@@ -157,7 +172,7 @@ function createRepository(){
     }
 
     async function getDatesForTeam(){
-        if(isEmpty(team.teamRef, "Team")){
+        if(isEmptyWithNotification(team.teamRef, "Team")){
             return;
         }
         let dates: DateModel[] = [];
