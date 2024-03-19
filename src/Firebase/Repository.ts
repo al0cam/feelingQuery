@@ -1,10 +1,11 @@
-import { DocumentReference, addDoc, collection, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
+import { DocumentReference, addDoc, collection, doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore";
 import db from "./Firebase";
 import { notificationStore } from "../Stores/NotificationStore";
 import type { Team } from "../Models/Team";
 import { teamStore } from "../Stores/TeamStore";
 import type { DateModel } from "../Models/DateModel";
 import type { Feeling } from "../Models/Feeling";
+import { get } from "svelte/store";
 
 function createRepository(){
 
@@ -13,6 +14,12 @@ function createRepository(){
         team = teamData;
     });
     let todayDate: DateModel;
+
+    function getDayDifference(date1: Date, date2: Date): number {
+        const oneDay = 24 * 60 * 60 * 1000; // hours * minutes * seconds * milliseconds
+        const diffDays = Math.round(Math.abs((date1.getTime() - date2.getTime()) / oneDay));
+        return diffDays;
+    }
 
     function isDateInStore(date: Date) {
         team.dates.forEach((d) => {
@@ -23,6 +30,7 @@ function createRepository(){
         }
         );
     }
+
 
     function isDateCached(date: Date) {
         return !isEmpty(todayDate, "Date") && todayDate.date === date && isDateInStore(date);
@@ -184,22 +192,47 @@ function createRepository(){
         }
     }
 
-    // TODO: define a way to check if the date is already in the store
-    async function getDatesForTeam(){
+    async function getAllDatesForTeam(){
         if(isEmptyWithNotification(team.teamRef, "Team")){
             return;
         }
 
         let dates: DateModel[] = [];
 
-        let teamRef = doc(db, "teams", team.teamName);
-        const datesRef = collection(teamRef, "dates");
+        const datesRef = collection(team.teamRef, "dates");
         const datesSnapshot = await getDocs(datesRef);
         try {
             datesSnapshot.forEach((doc) => {
-                dates.push({date: new Date(doc.id), dateRef: doc.ref} as DateModel);
+                dates.push({date: doc.data().date, dateRef: doc.ref} as DateModel);
             });
-            teamStore.setDates(dates);
+            notificationStore.addSuccessNotification("Dates retrieved successfully");
+            return dates;
+        } catch (error) {
+            notificationStore.addErrorNotification("Error getting dates");
+        }
+    }
+
+    async function getDatesForTeam(datefrom: Date, dateTo: Date){
+        if(isEmptyWithNotification(team.teamRef, "Team")){
+            return;
+        }
+        if(isEmpty(datefrom, "Date") || isEmpty(dateTo, "Date")){
+            return getAllDatesForTeam();
+        }
+        if(datefrom > dateTo){
+            notificationStore.addErrorNotification("First date is greater than the second date");
+            return;
+        }
+
+        let dates: DateModel[] = [];
+
+        const datesRef = collection(team.teamRef, "dates");
+        const q = query(datesRef, where("date", ">=", datefrom), where("date", "<=", dateTo));
+        const datesSnapshot = await getDocs(q);
+        try {
+            datesSnapshot.forEach((doc) => {
+                dates.push({date: doc.data().date, dateRef: doc.ref} as DateModel);
+            });
             notificationStore.addSuccessNotification("Dates retrieved successfully");
             return dates;
         } catch (error) {
