@@ -44,6 +44,14 @@ There are no tests yet.
 3. Make your changes
 4. Open a pull request
 
+## Documentation
+
+The application uses a repository for fetching things from the backend and a store to manage the fetched and cached information.
+Current use of the repository and store looks like this.
+
+
+
+
 ## License
 
 MIT License
