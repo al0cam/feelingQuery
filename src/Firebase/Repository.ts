@@ -31,7 +31,6 @@ function createRepository(){
         );
     }
 
-
     function isDateCached(date: Date) {
         return !isEmpty(todayDate, "Date") && todayDate.date === date && isDateInStore(date);
     }
@@ -292,7 +291,9 @@ function createRepository(){
         setTeamDates,
         getTeams,
         getDatesForTeam,
-        getFeelingsForDate
+        getFeelingsForDate,
+        getDateForTeam,
+        getAllDatesForTeam,
     }
 }
 
