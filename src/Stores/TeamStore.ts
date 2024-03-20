@@ -47,6 +47,36 @@ function createStore() {
         );
     }
 
+    function getAverageFeelingForDate(date: DateModel): number {
+        let feelings = date.feelings;
+        let sum = 0;
+        feelings.forEach(f => {
+            sum += f.value;
+        });
+        return sum / feelings.length;
+    }
+
+    function getModeFeelingForDate(date: DateModel): number {
+        let feelings = date.feelings;
+        let countMap = new Map<number, number>();
+        let maxCount = 0;
+        let modeFeeling = 0;
+
+        let count;
+        feelings.forEach(f => {
+            count = countMap.get(f.value) ?? 0;
+            count++;
+            countMap.set(f.value, count);
+
+            if (count > maxCount) {
+                maxCount = count;
+                modeFeeling = f.value;
+            }
+        });
+
+        return modeFeeling;
+    }
+
     return {
         subscribe,
         set,
@@ -54,7 +84,9 @@ function createStore() {
         setDates,
         addDate,
         setFeelingsForDate,
-        addFeelingForDate
+        addFeelingForDate,
+        getAverageFeelingForDate,
+        getModeFeelingForDate
     }
 }
 
