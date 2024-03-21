@@ -5,7 +5,6 @@ import type { Team } from "../Models/Team";
 import { teamStore } from "../Stores/TeamStore";
 import type { DateModel } from "../Models/DateModel";
 import type { Feeling } from "../Models/Feeling";
-import { get } from "svelte/store";
 
 function createRepository(){
 
@@ -150,29 +149,13 @@ function createRepository(){
             teamStore.set({teamName: teamName, teamRef: teamRef} as Team);
             let date = new Date();
             if(await docExists(doc(teamRef, "dates", date.toLocaleDateString("de-DE")))){
-                await setTeamDates();
-
+                await getDateForTeam(date);
             }
             else {
                 await addDate(date);
             }
         } else {
             notificationStore.addErrorNotification("Team not found");
-        }
-    }
-
-    async function setTeamDates(date: Date = new Date()){
-        // TODO: add two dates which will be used for displaying of a graph between the two dates
-        if(isEmpty(team.teamRef, "Team")){
-            return;
-        }
-        let todayDateRef = doc(team.teamRef, "dates", date.toLocaleDateString("de-DE"));
-        if(await docExists(todayDateRef)){
-            notificationStore.addSuccessNotification("Dates set successfully");
-        } else {
-            // TODO: maybe add a check for todays date to add it in case its not there
-            //  but future dates couldnt be added
-            notificationStore.addErrorNotification("No dates found");
         }
     }
 
@@ -288,7 +271,6 @@ function createRepository(){
         addDate,
         addFeelingForDate,
         setTeamByTeamName,
-        setTeamDates,
         getTeams,
         getDatesForTeam,
         getFeelingsForDate,
