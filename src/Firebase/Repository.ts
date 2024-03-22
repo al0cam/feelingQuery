@@ -20,21 +20,21 @@ function createRepository(){
         return diffDays;
     }
 
-    function isDateInStore(date: Date) {
+    function isDateInStore(date: Date): boolean {
         team.dates.forEach((d) => {
             if(d.date === date){
                 todayDate = d;
                 return true;
             }
-        }
-        );
+        });
+        return false;
     }
 
-    function isDateCached(date: Date) {
+    function isDateCached(date: Date): boolean {
         return !isEmpty(todayDate, "Date") && todayDate.date === date && isDateInStore(date);
     }
 
-    function isTeamCached(teamName: string) {
+    function isTeamCached(teamName: string): boolean {
         return !isEmpty(team, "Team") && team.teamName === teamName;
     }
 
@@ -194,7 +194,7 @@ function createRepository(){
         }
     }
 
-    async function getDatesForTeam(datefrom: Date, dateTo: Date){
+    async function getDateIntervalForTeam(datefrom: Date, dateTo: Date){
         if(isEmptyWithNotification(team.teamRef, "Team")){
             return;
         }
@@ -213,7 +213,8 @@ function createRepository(){
         const datesSnapshot = await getDocs(q);
         try {
             datesSnapshot.forEach((doc) => {
-                dates.push({date: doc.data().date, dateRef: doc.ref} as DateModel);
+                if(!isDateInStore(doc.data().date))
+                    teamStore.addDate({date: doc.data().date, dateRef: doc.ref} as DateModel);
             });
             notificationStore.addSuccessNotification("Dates retrieved successfully");
             return dates;
@@ -272,7 +273,7 @@ function createRepository(){
         addFeelingForDate,
         setTeamByTeamName,
         getTeams,
-        getDatesForTeam,
+        getDateIntervalForTeam,
         getFeelingsForDate,
         getDateForTeam,
         getAllDatesForTeam,
