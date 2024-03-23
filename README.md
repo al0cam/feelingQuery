@@ -49,9 +49,6 @@ There are no tests yet.
 The application uses a repository for fetching things from the backend and a store to manage the fetched and cached information.
 Current use of the repository and store looks like this.
 
-
-
-
 ## License
 
 MIT License
@@ -82,7 +79,7 @@ SOFTWARE.
 - [x] write code that generates toast messages for success, error and warning
 - [x] Define logic for setting the dates and teams
 - [x] Define logic for adding the dates and teams
-- [ ] Define logic for fetching the feelings
+- [x] Define logic for fetching the feelings
 - [ ] Add a way to share the feelings with the team
 - [ ] Add a way to visualize the feelings
 - [ ] Add a way to export the feelings
