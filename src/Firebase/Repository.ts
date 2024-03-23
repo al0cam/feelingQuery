@@ -132,7 +132,7 @@ function createRepository(){
         }
     }
 
-    async function setTeamByTeamName(teamName: string) {
+    async function getTeamByName(teamName: string) {
         teamName = teamName.trim();
         if(isEmpty(teamName, "Team")){
             return;
@@ -159,7 +159,7 @@ function createRepository(){
         }
     }
 
-    async function getTeams(){
+    async function getAllTeams(){
         let teams: Team[] = [];
         const teamsRef = collection(db, "teams");
         const teamsSnapshot = await getDocs(teamsRef);
@@ -271,8 +271,8 @@ function createRepository(){
         addTeam,
         addDate,
         addFeelingForDate,
-        setTeamByTeamName,
-        getTeams,
+        getTeamByName,
+        getAllTeams,
         getDateIntervalForTeam,
         getFeelingsForDate,
         getDateForTeam,
