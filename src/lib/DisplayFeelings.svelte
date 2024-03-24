@@ -12,7 +12,7 @@
   <input class="input w-fill" bind:value={teamRef} />
   <button
     class="btn btn-primary"
-    on:click={() => repository.setTeamByTeamName(teamRef)}>Set team</button
+    on:click={() => repository.getTeamByName(teamRef)}>Set team</button
   >
 </div>
 
@@ -26,7 +26,7 @@
   >
 </div>
 
-<button class="btn btn-primary" on:click={() => repository.getTeams()}
+<button class="btn btn-primary" on:click={() => repository.getAllTeams()}
   >Get teams</button
 >
 <button class="btn btn-primary" on:click={() => repository.getAllDatesForTeam()}
