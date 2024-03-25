@@ -22,7 +22,9 @@
     "vite": "^5.0.8"
   },
   "dependencies": {
+    "chart.js": "^4.4.2",
     "daisyui": "latest",
-    "firebase": "^10.7.1"
+    "firebase": "^10.7.1",
+    "svelte-chartjs": "^3.1.5"
   }
 }

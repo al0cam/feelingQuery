@@ -1,6 +1,7 @@
 <script lang="ts">
   import { repository } from "../Firebase/Repository";
   import { teamStore } from "../Stores/TeamStore";
+  import { Line } from "svelte-chartjs";
 
   let date = new Date();
   let teamRef = "";
@@ -38,3 +39,7 @@
     <span> {date.date.toLocaleDateString("de-DE")} </span>
   {/each}
 {/if}
+
+<!-- TODO: add the fetching o feelings from the teamStore -->
+<!-- TODO: maybe i need to introduce a new store for the graph data since it seems quite complex to display -->
+<!-- <Line/> -->

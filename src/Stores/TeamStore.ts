@@ -77,6 +77,8 @@ function createStore() {
         return modeFeeling;
     }
 
+    // TODO: add methods which interface with the repository to fetch values as required for the teamStore
+
     return {
         subscribe,
         set,
