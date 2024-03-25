@@ -48,6 +48,11 @@ There are no tests yet.
 
 The application uses a repository for fetching things from the backend and a store to manage the fetched and cached information.
 Current use of the repository and store looks like this.
+![alt text](Docs/generalTransactions.png)
+
+I want to change the current arhitecture so that all the calls for the repository, at least for a basic user go through the teamStore.
+Since all the caching is happening in the teamStore and so on, that would prevent extra calls to the Repository and it would make more sense to interface the teamStore from the frontend dev perspective.
+All the values which I am supposed to fetch for the frontend come from the store anyway.
 
 ## License
 
