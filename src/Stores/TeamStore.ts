@@ -1,9 +1,7 @@
-
 import { writable } from "svelte/store";
 import type { Team } from "../Models/Team";
 import type { DateModel } from "../Models/DateModel";
 import type { Feeling } from "../Models/Feeling";
-
 
 
 function createStore() {

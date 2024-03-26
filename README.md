@@ -54,6 +54,17 @@ I want to change the current arhitecture so that all the calls for the repositor
 Since all the caching is happening in the teamStore and so on, that would prevent extra calls to the Repository and it would make more sense to interface the teamStore from the frontend dev perspective.
 All the values which I am supposed to fetch for the frontend come from the store anyway.
 
+After further contemplation, I have come to the conclusion that the repository shouldnt have any complex logic in it. The only responsibility it should have is fetching things from the database or backend.
+
+All the logic should be pushed into the store. The store should be the one that is responsible for managing the state of the application and checking whether it's even required to call the repository or if the data is already in the store.
+
+Another important point is that svelte stores, at present, don't have a get method which complicates things. Because of that I like vue's stores more. But since the application is done in svelte now, I will try to make a workaround for that. (As far as I have seen, in Svelte 5 this is addressed)
+
+Even though I wrote all of this I don't feel like implementing them right now.
+But it's a good reference for future development.
+
+Now that I look closely at the repository, I see that it only contains CRU calls and helper methods such as isCached...
+
 ## License
 
 MIT License

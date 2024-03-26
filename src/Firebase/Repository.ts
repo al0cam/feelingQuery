@@ -58,7 +58,7 @@ function createRepository(){
         return docSnap.exists();
     }
 
-    async function addTeam(teamName: string){
+    async function addTeam(teamName: string) {
         if(isEmptyWithNotification(teamName, "Team")){
             return;
         }
@@ -83,7 +83,6 @@ function createRepository(){
             return teamRef.id;
         } catch (error) {
             notificationStore.addErrorNotification("Error adding team");
-            console.error("Error adding document: ", error);
         }
     }
 
@@ -101,7 +100,6 @@ function createRepository(){
             notificationStore.addErrorNotification("Date already exists");
             return;
         }
-        console.log(todayDateRef);
 
         try {
             await setDoc(todayDateRef,
@@ -112,7 +110,6 @@ function createRepository(){
 
             notificationStore.addSuccessNotification("Date added successfully");
         } catch (error) {
-            console.error("Error writing document: ", error);
             notificationStore.addErrorNotification("Error adding date");
         }
     }
@@ -127,7 +124,6 @@ function createRepository(){
             teamStore.addFeelingForDate(feeling, date);
             notificationStore.addSuccessNotification("Feeling added successfully");
         } catch (error) {
-            console.error("Error writing document: ", error);
             notificationStore.addErrorNotification("Error adding feeling");
         }
     }
