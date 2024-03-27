@@ -14,6 +14,10 @@ function createRepository(){
     });
     let todayDate: DateModel;
 
+    function isDateToday(date: Date): boolean {
+        return getDayDifference(new Date(), date) === 0;
+    }
+
     function getDayDifference(date1: Date, date2: Date): number {
         const oneDay = 24 * 60 * 60 * 1000; // hours * minutes * seconds * milliseconds
         const diffDays = Math.round(Math.abs((date1.getTime() - date2.getTime()) / oneDay));
@@ -63,6 +67,8 @@ function createRepository(){
             return;
         }
         if(isTeamCached(teamName)){
+            console.log("Date: " + todayDate);
+            
             notificationStore.addInfoNotification("Team was already fetched");
             return;
         }
@@ -98,6 +104,8 @@ function createRepository(){
         let todayDateRef = doc(team.teamRef, "dates", getFormatedDate(date));
         if(await docExists(todayDateRef)){
             notificationStore.addErrorNotification("Date already exists");
+            todayDate = {date: date, dateRef: todayDateRef} as DateModel;
+            teamStore.addDate(todayDate);
             return;
         }
 
@@ -106,8 +114,7 @@ function createRepository(){
                 { date: date },
                 { merge: true });
             todayDate = {date: date, dateRef: todayDateRef} as DateModel;
-            console.log("today: " + todayDate.date);
-
+            teamStore.addDate(todayDate);
             notificationStore.addSuccessNotification("Date added successfully");
         } catch (error) {
             notificationStore.addErrorNotification("Error adding date");
@@ -120,10 +127,12 @@ function createRepository(){
         }
 
         try {
+            console.log("chilling here with: "+ date.dateRef);
             feeling.feelingRef = await addDoc(collection(date.dateRef, "feelings"), feeling);
             teamStore.addFeelingForDate(feeling, date);
             notificationStore.addSuccessNotification("Feeling added successfully");
         } catch (error) {
+            console.log(error);
             notificationStore.addErrorNotification("Error adding feeling");
         }
     }
@@ -229,11 +238,13 @@ function createRepository(){
         }
 
         let dateRef = doc(db, "teams", team.teamName, "dates", getFormatedDate(date));
-        const dateSnapshot = await getDoc(dateRef);
         try {
             notificationStore.addSuccessNotification("Date retrieved successfully");
-            teamStore.addDate({date: date, dateRef: dateRef} as DateModel);
-            return dateSnapshot;
+            let dateModel = {date: date, dateRef: dateRef} as DateModel;
+            teamStore.addDate(dateModel);
+            if(isDateToday(date)){
+                todayDate = dateModel;
+            }
         } catch (error) {
             notificationStore.addErrorNotification("Error getting date");
         }

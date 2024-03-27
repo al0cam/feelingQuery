@@ -7,6 +7,12 @@ import type { Feeling } from "../Models/Feeling";
 function createStore() {
     const { subscribe, set, update } = writable<Team>();
 
+    let team : Team;
+
+    subscribe((value) => {
+        team = value;
+    });
+
     function setDates(dates: DateModel[]) {
         update(team => {
             return {...team, dates: dates};
@@ -14,6 +20,9 @@ function createStore() {
     }
 
     function addDate(date: DateModel) {
+        if(team.dates === undefined){
+            team.dates = [];
+        }
         update(team => {
             return {...team, dates: [...team.dates, date]};
         });
@@ -33,6 +42,9 @@ function createStore() {
     }
 
     function addFeelingForDate(feeling: Feeling, date: DateModel) {
+        if(date.feelings === undefined){
+            date.feelings = [];
+        }
         update(team => {
             let newDates = team.dates.map((d) => {
                 if(d.date === date.date){
